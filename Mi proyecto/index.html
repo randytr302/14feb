@@ -159,7 +159,7 @@
 </head>
 <body>
     <div id="particles-js"></div>
-    
+
     <div class="contenedor-principal">
         <h1>Feliz San Valentín<span>❤️</span></h1>
         <div class="mensaje-escritura" id="mensaje"></div>
@@ -191,7 +191,7 @@
         // Manejo de música
         const musica = document.getElementById('musica');
         const btnReproducir = document.getElementById('btnReproducir');
-        
+
         musica.play().catch(() => {
             btnReproducir.style.display = 'block';
             btnReproducir.onclick = () => {
@@ -238,16 +238,16 @@
 PD: La sorpresa no acaba aquí 😌`;
 
         let index = 0;
-        
+
         function escribirTexto() {
             const elemento = document.getElementById('mensaje');
             if (index < mensaje.length) {
                 elemento.innerHTML += mensaje.charAt(index);
-                
-                if(elemento.offsetWidth > elemento.parentElement.offsetWidth) {
+
+                if (elemento.offsetWidth > elemento.parentElement.offsetWidth) {
                     elemento.innerHTML += '<br>';
                 }
-                
+
                 index++;
                 setTimeout(escribirTexto, 50);
             } else {
@@ -277,7 +277,7 @@ PD: La sorpresa no acaba aquí 😌`;
             { src: 'img/imagen5.jpg', desc: 'Aquí mejor no digo nada 🤣' },
             { src: 'img/imagen6.jpg', desc: 'Mira que gestitos más tiernos tiene mi mona conmigo 🥹❤️. Esto era todo, no me canso de decírtelo TE QUIERO MUCHÍSIMO MI MONITAA 🙈❤️' },
         ];
-        
+
         let currentImage = 0;
         let carruselInterval;
 
