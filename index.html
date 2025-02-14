@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Monita, Feliz San Valentín ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.css">
+    <style>
+        :root {
+            --rojo: #ff3860;
+            --rosa: #ff7eb9;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .contenedor-principal {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 8vw;
+            color: var(--rojo);
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mensaje-escritura {
+            font-size: 5vw;
+            color: #333;
+            margin: 20px auto;
+            min-height: 60px;
+            max-width: 90%;
+            width: fit-content;
+            text-align: center;
+            word-wrap: break-word;
+            position: relative;
+            padding-right: 10px;
+        }
+
+        .mensaje-escritura::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--rojo);
+            animation: parpadeo 0.7s infinite;
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 0 }
+            50% { opacity: 1 }
+            100% { opacity: 0 }
+        }
+
+        .boton-corazon {
+            padding: 3vw 6vw;
+            font-size: 4vw;
+            background: var(--rosa);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255,56,96,0.3);
+            margin-top: 20px;
+            display: none; /* Ocultar el botón inicialmente */
+        }
+
+        .boton-corazon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255,56,96,0.5);
+        }
+
+        .corazon-flotante {
+            position: absolute;
+            color: var(--rojo);
+            animation: flotar 3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes flotar {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+        }
+
+        .galeria {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            z-index: 3;
+            padding: 20px;
+        }
+
+        .contenedor-galeria {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            height: 100%;
+        }
+
+        .imagen-galeria {
+            width: 100%;
+            height: 70vh;
+            object-fit: contain;
+            transition: opacity 0.5s;
+        }
+
+        .descripcion {
+            text-align: center;
+            font-size: 4vw;
+            color: var(--rojo);
+            margin: 10px 0;
+        }
+
+        .botones-galeria {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .btn-nav {
+            background: var(--rosa);
+            border: none;
+            color: white;
+            padding: 2vw;
+            cursor: pointer;
+            font-size: 4vw;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="contenedor-principal">
+        <h1>Feliz San Valentín<span>❤️</span></h1>
+        <div class="mensaje-escritura" id="mensaje"></div>
+        <button class="boton-corazon" id="btnGaleria" style="display: none;">Toca Aquí</button>
+    </div>
+
+    <div class="galeria" id="galeria">
+        <div class="contenedor-galeria">
+            <img class="imagen-galeria" src="" alt="Nuestros momentos">
+            <div class="descripcion"></div>
+            <div class="botones-galeria">
+                <button class="btn-nav" onclick="cambiarImagen(-1)">❮</button>
+                <button class="btn-nav" onclick="cambiarImagen(1)">❯</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="musica" autoplay loop>
+        <source src="audio/tu_musica_romantica.mp3" type="audio/mpeg">
+        Tu navegador no soporta audio HTML5
+    </audio>
+
+    <button id="btnReproducir" style="display: none; position: fixed; bottom: 20px; left: 20px; z-index: 9999; padding: 10px 20px; background: #ff3860; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        ▶ Reproducir Música
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Manejo de música
+        const musica = document.getElementById('musica');
+        const btnReproducir = document.getElementById('btnReproducir');
+
+        musica.play().catch(() => {
+            btnReproducir.style.display = 'block';
+            btnReproducir.onclick = () => {
+                musica.play();
+                btnReproducir.style.display = 'none';
+                setTimeout(() => {
+                    escribirTexto(); // Inicia la escritura del texto después de 3 segundos
+                }, 3000); // 3000 milisegundos = 3 segundos
+            }
+        });
+
+        // Configuración de partículas
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80 },
+                color: { value: '#ff3860' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5 },
+                size: { value: 3 },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Mensaje de amor
+        const mensaje = `Mi negrita bella, sabes que no soy bueno para estas cosas, pero esta es una bonita fecha en la que de alguna forma estamos juntos y no se puede pasar por alto. Nunca me imaginé que aquella niñita loca que conocí en un grupo de Telegram, que nuestro comienzo fue una discusión,donde después me fue tomando un poquito más de confianza, me contaba muchas de sus cosas y yo la aconsejaba como si fuese parte de mi familia. Todas las pequeñas peleas que tuvimos, el tiempo que dejamos de hablar pensando que ese ya sería el fin. No hizo más que reflejarse en el día de hoy, en el que me está haciendo reír con sus locuras 😂, sus ocurrencias, que me quiere tanto que me lo demuestras a cada segundo, porque a ver, dime tú, a quién le ponen una velita para que salga bien en una prueba, si no es a alguien a quien adoras?😌. Quién está ahí de pulguita aventurera que no me deja ni escribir este mensaje?🤣 . Le tuve que enviar ese audio a las 5:11 pm y me lo responde con un "ok", que malcriada está esta niña, pero es mia, mi monita, mi negrita 🤗.Con la que pasé mucho trabajo para saber su cumpleaños y ya no se me olvida ese 20 de noviembre. La que no me quiere decir donde vive exactamente, pero para qué? Si no sale de mi corazón. No olvides que te quiero muchísimo. Espero que siendo las 12 y unos minutos del 14 de febrero estés leyendo este mensaje, que no es el más bonito, pero si el más sincero, tengas una pequeña sonrisa en la cara y algunos sentimientos encontrados (como se cree cosa tu negro😂). Te deseo que pases un hermoso día con tu familia y pienses mucho en tu monito, que le dan muchas cositas en el estómago cada vez que le pasas por su mente🥹
+
+PD: La sorpresa no acaba aquí 😌`;
+
+        let index = 0;
+
+        function escribirTexto() {
+            const elemento = document.getElementById('mensaje');
+            if (index < mensaje.length) {
+                elemento.innerHTML += mensaje.charAt(index);
+
+                if (elemento.offsetWidth > elemento.parentElement.offsetWidth) {
+                    elemento.innerHTML += '<br>';
+                }
+
+                index++;
+                setTimeout(escribirTexto, 50);
+            } else {
+                elemento.style.paddingRight = '0';
+                elemento.style.animation = 'none';
+                document.getElementById('btnGaleria').style.display = 'block'; // Muestra el botón
+            }
+        }
+
+        // Sistema de corazones
+        function crearCorazon() {
+            const corazon = document.createElement('div');
+            corazon.innerHTML = '❤️';
+            corazon.className = 'corazon-flotante';
+            corazon.style.left = Math.random() * 100 + 'vw';
+            corazon.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(corazon);
+            setTimeout(() => corazon.remove(), 3000);
+        }
+
+        // Galería de fotos
+        const fotos = [
+            { src: 'img/imagen1.jpg', desc: 'Me dirás que estoy loco, pero de qué forma no puede gustarte esta cosita tan preciosa 🥹❤️' },
+            { src: 'img/imagen2.jpg', desc: 'Es que mírala, sin palabras 🤗❤️' },
+            { src: 'img/imagen3.jpg', desc: 'Y aquí tu cosa fea 😂😂😂, negra, eso está feo' },
+            { src: 'img/imagen4.jpg', desc: 'Y cómo va a faltar la foto que más amo y la que más tu odias 😁❤️' },
+            { src: 'img/imagen5.jpg', desc: 'Aquí mejor no digo nada 🤣' },
+            { src: 'img/imagen6.jpg', desc: 'Mira que gestitos más tiernos tiene mi mona conmigo 🥹❤️. Esto era todo, no me canso de decírtelo TE QUIERO MUCHÍSIMO MI MONITAA 🙈❤️' },
+        ];
+
+        let currentImage = 0;
+        let carruselInterval;
+
+        function mostrarGaleria() {
+            document.querySelector('.contenedor-principal').style.display = 'none';
+            document.getElementById('galeria').style.display = 'block';
+            iniciarCarrusel();
+            actualizarImagen(0);
+        }
+
+        function actualizarImagen(n) {
+            currentImage = (n + fotos.length) % fotos.length;
+            document.querySelector('.imagen-galeria').src = fotos[currentImage].src;
+            document.querySelector('.descripcion').textContent = fotos[currentImage].desc;
+        }
+
+        function cambiarImagen(direction) {
+            clearInterval(carruselInterval);
+            actualizarImagen(currentImage + direction);
+            iniciarCarrusel();
+        }
+
+        function iniciarCarrusel() {
+            carruselInterval = setInterval(() => cambiarImagen(1), 5000);
+        }
+
+        // Event Listeners
+        document.getElementById('btnGaleria').addEventListener('click', () => {
+            crearCorazon();
+            setInterval(crearCorazon, 300);
+            setTimeout(mostrarGaleria, 2500);
+        });
+
+        // Iniciar efectos
+        setInterval(crearCorazon, 1000);
+    </script>
+</body>
+</html>
